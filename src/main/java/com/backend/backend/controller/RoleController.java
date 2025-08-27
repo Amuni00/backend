@@ -25,14 +25,6 @@ public class RoleController {
 		this.roleService = roleService;
 	}
 
-	// Create
-	@PostMapping("/register-role")
-	public ResponseEntity<String> createRole(@RequestBody Role role) {
-	    Role savedRole = roleService.registerRole(role);
-	    return ResponseEntity.ok("Role registered successfully");
-	}
-
-
 	// Read (all)
 	@GetMapping("/get-roles")
 	public ResponseEntity<List<Role>> getAllRoles() {

@@ -1,7 +1,7 @@
 package com.backend.backend.entity;
 
-import java.util.List;
 
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -10,97 +10,75 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.CascadeType;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-
-
-
+import java.time.LocalDate;
 @Entity
 @Table(name = "User_Table")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String firstName;
-	private String lastName;
-	private String phoneNumber;
-	private String username;
-	private String email;
-	private String password;
-	private String role;
-	
-	// ===========================
-    // Getters
-    // ===========================
-    public Long getId() {
-        return id;
-    }
 
-    public String getFirstName() {
-        return firstName;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public String getLastName() {
-        return lastName;
-    }
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private String username;
+    private String email;
+    private String password;
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+    // Relation with Role
+    @ManyToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    private Role role;
 
-    public String getUsername() {
-        return username;
-    }
+    // Tasks created by this user
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    private List<Task> createdTasks;
 
-    public String getEmail() {
-        return email;
-    }
+    // Tasks assigned to this user
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL)
+    private List<Task> assignedTasks;
 
-    public String getPassword() {
-        return password;
-    }
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getRole() {
-        return role;
-    }
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
 
-    // ===========================
-    // Setters
-    // ===========================
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public List<Task> getCreatedTasks() { return createdTasks; }
+    public void setCreatedTasks(List<Task> createdTasks) { this.createdTasks = createdTasks; }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
+    public List<Task> getAssignedTasks() { return assignedTasks; }
+    public void setAssignedTasks(List<Task> assignedTasks) { this.assignedTasks = assignedTasks; }
 }

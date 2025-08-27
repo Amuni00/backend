@@ -3,52 +3,58 @@ package com.backend.backend.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.backend.backend.entity.User;
+import com.backend.backend.exception.ValidationException;
 import com.backend.backend.service.UserService;
 
 @RestController
 @RequestMapping("/api")
 public class UserController {
 
-	private final UserService userService;
+    private final UserService userService;
 
-	public UserController(UserService userService) {
-		this.userService = userService;
-	}
-
-	// Create
-	@PostMapping("/register-user")
-    public ResponseEntity<String> createUser(@RequestBody User user) {
-        User savedUser = userService.registerUser(user);
-        return ResponseEntity.ok("user registered successfully");
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-	// Read (all)
-	@GetMapping("/get-users")
-	public ResponseEntity<List<User>> getAllUsers() {
-		return ResponseEntity.ok(userService.getAllUsers());
-	}
+    // Create
+    @PostMapping("/register-user")
+    public ResponseEntity<String> createUser(@RequestBody User user) {
+        try {
+            userService.registerUser(user);
+            return ResponseEntity.ok("User registered successfully");
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
-	// Update
-	@PutMapping("update-user/{id}")
-	public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody User user) {
-		return ResponseEntity.ok("user updated successfully");
-	}
+    // Read
+    @GetMapping("/get-users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
 
-	// Delete
-	@DeleteMapping("delete-user/{id}")
-	public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-		userService.deleteUser(id);
-		return ResponseEntity.ok("User deleted successfully with id " + id);
-	}
-	
+    // Update
+    @PutMapping("/update-user/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody User user) {
+        try {
+            userService.updateUser(id, user);
+            return ResponseEntity.ok("User updated successfully");
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // Delete
+    @DeleteMapping("/delete-user/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUser(id);
+            return ResponseEntity.ok("User deleted successfully with id " + id);
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
