@@ -11,21 +11,21 @@ public class TaskDto {
     private LocalDate dueDate;
     private String priority;
 
-    private Long creatorId;   // instead of embedding full User
-    private Long assigneeId;
+    private String creatorName;   // instead of embedding full User
+    private String assigneeName;
 
     public TaskDto() {}
 
     public TaskDto(Long id, String title, String description, String status, LocalDate dueDate, 
-                   String priority, Long creatorId, Long assigneeId) {
+                   String priority, String creatorName, String assigneeName) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
         this.dueDate = dueDate;
         this.priority = priority;
-        this.creatorId = creatorId;
-        this.assigneeId = assigneeId;
+        this.creatorName = creatorName;
+        this.assigneeName = assigneeName;
     }
 
     // Getters and Setters
@@ -71,17 +71,17 @@ public class TaskDto {
         this.priority = priority;
     }
 
-    public Long getCreatorId() {
-        return creatorId;
+    public String getCreatorName() {
+        return creatorName;
     }
-    public void setCreatorId(Long creatorId) {
-        this.creatorId = creatorId;
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 
-    public Long getAssigneeId() {
-        return assigneeId;
+    public String getAssigneeName() {
+        return assigneeName;
     }
-    public void setAssigneeId(Long assigneeId) {
-        this.assigneeId = assigneeId;
+    public void setAssigneeName(String assigneeName) {
+        this.assigneeName = assigneeName;
     }
 }

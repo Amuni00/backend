@@ -80,8 +80,12 @@ public class TaskController {
                         task.getStatus(),
                         task.getDueDate(),
                         task.getPriority(),
-                        task.getCreator() != null ? task.getCreator().getId() : null, // handle null creator
-                        task.getAssignee() != null ? task.getAssignee().getId() : null // handle null assignee
+                        (task.getCreator() != null) 
+                        ? task.getCreator().getFirstName() + " " + task.getCreator().getLastName() 
+                        : null,
+                        (task.getAssignee() != null) 
+                        ? task.getAssignee().getFirstName() + " " + task.getAssignee().getLastName() 
+                        : null
                 ))
                 .collect(Collectors.toList());
 
