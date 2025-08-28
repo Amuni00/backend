@@ -21,73 +21,103 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Table(name = "Task_Table")
 public class Task {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false, length = 200)
-    private String title;
+	@Column(nullable = false, length = 200)
+	private String title;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+	@Column(columnDefinition = "TEXT")
+	private String description;
 
-    @Column(nullable = false)
-    private String status = "PENDING";
+	@Column(nullable = false)
+	private String status = "PENDING";
 
-    private LocalDate dueDate;
+	private LocalDate dueDate;
 
-    @ManyToOne
-    @JoinColumn(name = "creator_id", referencedColumnName = "id")
-    private User creator;
+	@ManyToOne
+	@JoinColumn(name = "creator_id", referencedColumnName = "id")
+	private User creator;
 
-    @ManyToOne
-    @JoinColumn(name = "assignee_id", referencedColumnName = "id")
-    private User assignee;
+	 @ManyToOne
+	 @JoinColumn(name = "assignee_id", referencedColumnName = "id")
+	private User assignee;
 
-    @Column(nullable = false)
-    private String priority; // e.g., LOW, MEDIUM, HIGH
+	@Column(nullable = false)
+	private String priority; // e.g., LOW, MEDIUM, HIGH
 
-    // Constructors
-    public Task() {}
+	// Constructors
+	public Task() {
+	}
 
-    public Task(String title, String description, String status, LocalDate dueDate,
-                User creator, User assignee, String priority) {
-        this.title = title;
-        this.description = description;
-        this.status = status;
-        this.dueDate = dueDate;
-        this.creator = creator;
-        this.assignee = assignee;
-        this.priority = priority;
-    }
+	public Task(String title, String description, String status, LocalDate dueDate, User creator, User assignee, String priority) {
+		this.title = title;
+		this.description = description;
+		this.status = status;
+		this.dueDate = dueDate;
+		this.creator = creator;
+		this.assignee = assignee;
+		this.priority = priority;
+	}
 
-    // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+	// Getters & Setters
+	public Long getId() {
+		return id;
+	}
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+	public String getTitle() {
+		return title;
+	}
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public LocalDate getDueDate() { return dueDate; }
-    public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
+	public String getDescription() {
+		return description;
+	}
 
-    public User getCreator() { return creator; }
-    public void setCreator(User creator) { this.creator = creator; }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public User getAssignee() { return assignee; }
-    public void setAssignee(User assignee) { this.assignee = assignee; }
+	public String getStatus() {
+		return status;
+	}
 
-    public String getPriority() { return priority; }
-    public void setPriority(String priority) { this.priority = priority; }
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public LocalDate getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(LocalDate dueDate) {
+		this.dueDate = dueDate;
+	}
+
+	public User getCreator() { return creator; }
+	public void setCreator(User creator) { this.creator = creator; }
+
+	public User getAssignee() { return assignee; }
+	public void setAssignee(User assignee) { this.assignee = assignee; }
+
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
 }

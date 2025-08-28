@@ -44,12 +44,12 @@ public class User {
     private Role role;
 
     // Tasks created by this user
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
-    private List<Task> createdTasks;
+    //@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    //private List<Task> createdTasks;
 
     // Tasks assigned to this user
-    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL)
-    private List<Task> assignedTasks;
+    //@OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL)
+    //private List<Task> assignedTasks;
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -76,9 +76,9 @@ public class User {
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
 
-    public List<Task> getCreatedTasks() { return createdTasks; }
-    public void setCreatedTasks(List<Task> createdTasks) { this.createdTasks = createdTasks; }
+    //public List<Task> getCreatedTasks() { return createdTasks; }
+    //public void setCreatedTasks(List<Task> createdTasks) { this.createdTasks = createdTasks; }
 
-    public List<Task> getAssignedTasks() { return assignedTasks; }
-    public void setAssignedTasks(List<Task> assignedTasks) { this.assignedTasks = assignedTasks; }
+    //public List<Task> getAssignedTasks() { return assignedTasks; }
+    //public void setAssignedTasks(List<Task> assignedTasks) { this.assignedTasks = assignedTasks; }
 }

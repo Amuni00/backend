@@ -1,10 +1,13 @@
 package com.backend.backend.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.backend.backend.dto.RoleDto;
+import com.backend.backend.dto.UserDto;
 import com.backend.backend.entity.User;
 import com.backend.backend.exception.ValidationException;
 import com.backend.backend.service.UserService;
@@ -30,11 +33,27 @@ public class UserController {
         }
     }
 
-    // Read
+ // Read all users
     @GetMapping("/get-users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+
+        List<UserDto> dtoList = users.stream()
+                .map(user -> new UserDto(
+                        user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getUsername(),
+                        user.getEmail(),
+                        user.getPhoneNumber(),
+                        new RoleDto(user.getRole().getName()) // RoleDto mapping
+                ))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(dtoList);
     }
+    
+
 
     // Update
     @PutMapping("/update-user/{id}")

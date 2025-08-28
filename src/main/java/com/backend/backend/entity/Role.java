@@ -33,19 +33,21 @@ public class Role {
     @Column(nullable = false, unique = true)
     private String name; // e.g., ADMIN, MANAGER, SUPPORTER
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    private List<User> users;
+//    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+//    private List<User> users;
 
     // Constructors
     public Role() {}
     public Role(String name) { this.name = name; }
 
     // Getters and Setters
+    
+    public Long getId() { return id; }   
     public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public List<User> getUsers() { return users; }
-    public void setUsers(List<User> users) { this.users = users; }
+//    public List<User> getUsers() { return users; }
+//    public void setUsers(List<User> users) { this.users = users; }
 }
