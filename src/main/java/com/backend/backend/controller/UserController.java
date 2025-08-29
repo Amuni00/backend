@@ -13,7 +13,7 @@ import com.backend.backend.exception.ValidationException;
 import com.backend.backend.service.UserService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 public class UserController {
 
     private final UserService userService;
