@@ -1,23 +1,9 @@
 package com.backend.backend.service;
 
+import com.backend.backend.entity.Role;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
-import com.backend.backend.entity.Role;
-import com.backend.backend.repositories.RoleRepository;
-
-@Service
-public class RoleService {
-
-	private final RoleRepository roleRepository;
-
-	public RoleService(RoleRepository roleRepository) {
-		this.roleRepository = roleRepository;
-	}
-
-	public List<Role> getAllRoles() {
-		return roleRepository.findAll();
-	}
-
+public interface RoleService {
+    Role createRole(Role role);
+    List<Role> getAllRoles();
 }

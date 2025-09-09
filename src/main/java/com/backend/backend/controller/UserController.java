@@ -36,7 +36,7 @@ public class UserController {
  // Read all users
     @GetMapping("/get-users")
     public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
+        List<UserDto> users = userService.getAllUsers();
 
         List<UserDto> dtoList = users.stream()
                 .map(user -> new UserDto(
