@@ -4,18 +4,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.backend.backend.dto.TaskDto;
 import com.backend.backend.dto.UserDto;
 import com.backend.backend.entity.Task;
-import com.backend.backend.entity.User;
+import com.backend.backend.entity.UserEntity;
 import com.backend.backend.service.TaskService;
 import com.backend.backend.exception.ValidationException;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/task")
+//@PreAuthorize("hasAuthority('Manager')")
 public class TaskController {
 
     private final TaskService taskService;
@@ -25,6 +28,7 @@ public class TaskController {
     }
 
     // Create Task
+
     @PostMapping("create-task")
     public ResponseEntity<?> createTask(@RequestBody Task task) {
         try {
@@ -33,6 +37,17 @@ public class TaskController {
         } catch (ValidationException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+    
+//    @PreAuthorize("hasAuthority('Admin')")
+    @GetMapping("get-assigned-task/{id}")
+    public ResponseEntity<?> getAssignedTask(@PathVariable Long supportId) {
+    	List<Task> tasks = taskService.getAssigneesTaskById(supportId);
+    	
+    	if (tasks.isEmpty()) {
+    		return new ResponseEntity<>("No task found", HttpStatus.NOT_FOUND);
+    	}
+    	return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
     
     //assign task

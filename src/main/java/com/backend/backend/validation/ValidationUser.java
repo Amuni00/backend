@@ -1,11 +1,11 @@
 package com.backend.backend.validation;
 
-import com.backend.backend.entity.User;
+import com.backend.backend.entity.UserEntity;
 import com.backend.backend.exception.ValidationException;
 
 public class ValidationUser {
 
-    public static void validate(User user) {
+    public static void validate(UserEntity user) {
         // Username not empty
         if (user.getUsername() == null || user.getUsername().isBlank()) {
             throw new ValidationException("Username cannot be empty");

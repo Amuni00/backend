@@ -2,14 +2,17 @@ package com.backend.backend.service;
 
 import java.util.List;
 
-import com.backend.backend.dto.LoginDto;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import com.backend.backend.dto.LoginDTO;
 import com.backend.backend.dto.UserDto;
-import com.backend.backend.entity.User;
+import com.backend.backend.entity.UserEntity;
 
 public interface UserService {
-    User registerUser(User user); // registration
-    UserDto login(LoginDto loginDto); // login with JWT
+    UserEntity registerUser(UserEntity user); // registration
     List<UserDto> getAllUsers(); // returns DTO now
-    UserDto updateUser(Long id, User user);
+    UserDto updateUser(Long id, UserEntity user);
     void deleteUser(Long id);
+	//UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 }

@@ -1,14 +1,12 @@
 package com.backend.backend.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.backend.backend.dto.RoleDto;
 import com.backend.backend.dto.UserDto;
-import com.backend.backend.entity.User;
+import com.backend.backend.entity.UserEntity;
 import com.backend.backend.exception.ValidationException;
 import com.backend.backend.service.UserService;
 
@@ -22,9 +20,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Create
+    // Create user
     @PostMapping("/register-user")
-    public ResponseEntity<String> createUser(@RequestBody User user) {
+    public ResponseEntity<String> createUser(@RequestBody UserEntity user) {
         try {
             userService.registerUser(user);
             return ResponseEntity.ok("User registered successfully");
@@ -33,31 +31,20 @@ public class UserController {
         }
     }
 
- // Read all users
+    // Get all users
     @GetMapping("/get-users")
     public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> users = userService.getAllUsers();
-
-        List<UserDto> dtoList = users.stream()
-                .map(user -> new UserDto(
-                        user.getId(),
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getUsername(),
-                        user.getEmail(),
-                        user.getPhoneNumber(),
-                        new RoleDto(user.getRole().getName()) // RoleDto mapping
-                ))
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(dtoList);
+        try {
+            List<UserDto> users = userService.getAllUsers();
+            return ResponseEntity.ok(users);
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
-    
 
-
-    // Update
+    // Update user
     @PutMapping("/update-user/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody User user) {
+    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody UserEntity user) {
         try {
             userService.updateUser(id, user);
             return ResponseEntity.ok("User updated successfully");
@@ -66,7 +53,7 @@ public class UserController {
         }
     }
 
-    // Delete
+    // Delete user
     @DeleteMapping("/delete-user/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         try {

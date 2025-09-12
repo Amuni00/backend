@@ -43,11 +43,11 @@ public class Task {
 
 	@ManyToOne
 	@JoinColumn(name = "creator_id", referencedColumnName = "id")
-	private User creator;
+	private UserEntity creator;
 
 	 @ManyToOne
 	 @JoinColumn(name = "assignee_id", referencedColumnName = "id")
-	private User assignee;
+	private UserEntity assignee;
 
 	@Column(nullable = false)
 	private String priority; // e.g., LOW, MEDIUM, HIGH
@@ -56,7 +56,7 @@ public class Task {
 	public Task() {
 	}
 
-	public Task(String title, String description, String status, LocalDate dueDate, User creator, User assignee, String priority) {
+	public Task(String title, String description, String status, LocalDate dueDate, UserEntity creator, UserEntity assignee, String priority) {
 		this.title = title;
 		this.description = description;
 		this.status = status;
@@ -107,11 +107,11 @@ public class Task {
 		this.dueDate = dueDate;
 	}
 
-	public User getCreator() { return creator; }
-	public void setCreator(User creator) { this.creator = creator; }
+	public UserEntity getCreator() { return creator; }
+	public void setCreator(UserEntity creator) { this.creator = creator; }
 
-	public User getAssignee() { return assignee; }
-	public void setAssignee(User assignee) { this.assignee = assignee; }
+	public UserEntity getAssignee() { return assignee; }
+	public void setAssignee(UserEntity assignee) { this.assignee = assignee; }
 
 	public String getPriority() {
 		return priority;

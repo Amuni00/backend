@@ -1,14 +1,12 @@
 package com.backend.backend.config;
 
-import com.backend.backend.security.JwtAuthEntryPoint;
-import com.backend.backend.security.JwtAuthenticationFilter;
-import com.backend.backend.service.UserService; // your UserService implementing UserDetailsService
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,57 +14,49 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableMethodSecurity(prePostEnabled = true) // Enables @PreAuthorize and @PostAuthorize annotations
+@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
+	
+//	private JWTAuthenticationFilter jwtAuthenticationFilter;
+	private JwtAuthEntryPoint authEntryPoint;
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final JwtAuthEntryPoint jwtAuthEntryPoint;
-    private final UserService userService;
+    public SecurityConfig(JwtAuthEntryPoint authEntryPoint) {
+//		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+		this.authEntryPoint = authEntryPoint;
+	}
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
-                          JwtAuthEntryPoint jwtAuthEntryPoint,
-                          UserService userService) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.jwtAuthEntryPoint = jwtAuthEntryPoint;
-        this.userService = userService;
-    }
-
-    @Bean
+	@Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Encode passwords
+        return new BCryptPasswordEncoder();
+    }
+
+    // ✅ Expose AuthenticationManager as a bean
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for APIs
-            .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthEntryPoint)) // Handle unauthorized
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // No session
-            .authorizeHttpRequests(auth -> auth
-                // Public endpoints (login/register)
-                .requestMatchers("/api/login", "/api/register-user").permitAll()
-
-                // Admin-only endpoints
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-
-                // Manager-only endpoints
-                .requestMatchers("/api/manager/**").hasRole("MANAGER")
-
-                // Support-only endpoints
-                .requestMatchers("/api/support/**").hasRole("SUPPORT")
-
-                // Any other request needs authentication
-                .anyRequest().authenticated()
-            );
-
-        // Add JWT filter before UsernamePasswordAuthenticationFilter
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .authorizeHttpRequests(authorize -> authorize
+            	.requestMatchers("/api/auth/login-user").permitAll()
+            	.requestMatchers("/api/admin", "/api/role").hasAuthority("Admin")	
+            	.requestMatchers("/api/task").hasAnyAuthority("Manager", "Support")
+                .anyRequest().authenticated() // Allow all requests (adjust later)
+            )
+            .csrf(csrf -> csrf.disable()) // Disable CSRF for now (useful for APIs)
+        	.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+        	.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        	.exceptionHandling(handling -> handling.authenticationEntryPoint(authEntryPoint));
 
         return http.build();
     }
+    
+    @Bean
+	public JWTAuthenticationFilter jwtAuthenticationFilter() {
+		return new JWTAuthenticationFilter();
+	}
+
 }

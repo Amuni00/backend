@@ -24,7 +24,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "User_Table")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +33,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String phoneNumber;
+    @Column(name = "username")
     private String username;
     private String email;
     private String password;

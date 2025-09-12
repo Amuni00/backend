@@ -1,12 +1,12 @@
 package com.backend.backend.dto;
 
-public class LoginDto {
+public class LoginDTO {
     private String username;  // email can also be used
     private String password;
 
-    public LoginDto() {}
+    public LoginDTO() {}
 
-    public LoginDto(String username, String password) {
+    public LoginDTO(String username, String password) {
         this.username = username;
         this.password = password;
     }

@@ -16,7 +16,7 @@ import com.backend.backend.entity.Role;
 import com.backend.backend.service.RoleService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/role")
 public class RoleController {
 
 	private final RoleService roleService;

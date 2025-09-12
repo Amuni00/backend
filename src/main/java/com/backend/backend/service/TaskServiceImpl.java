@@ -1,10 +1,13 @@
 package com.backend.backend.service;
 
 import com.backend.backend.entity.Task;
-import com.backend.backend.entity.User;
+import com.backend.backend.entity.UserEntity;
 import com.backend.backend.exception.ValidationException;
 import com.backend.backend.repositories.TaskRepository;
 import com.backend.backend.repositories.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +33,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new ValidationException("Task not found with id " + taskId));
 
-        User assignee = userRepository.findById(assigneeId)
+        UserEntity assignee = userRepository.findById(assigneeId)
                 .orElseThrow(() -> new ValidationException("User not found with id " + assigneeId));
 
         task.setAssignee(assignee);
@@ -61,6 +64,15 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
+    }
+    
+    public List<Task> getAssigneesTaskById(Long id) {
+    	UserEntity user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User id with: " + id + "not found"));
+		List<Task> tasks = taskRepository.findByAssignee(user);
+		if(tasks.isEmpty()) {
+			return List.of();
+		}
+		return tasks;
     }
 
 }
