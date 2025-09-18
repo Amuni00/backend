@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -25,6 +26,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task createTask(Task task) {
+    	task.setStatus("DRAFT");
         return taskRepository.save(task);
     }
     
@@ -37,6 +39,7 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new ValidationException("User not found with id " + assigneeId));
 
         task.setAssignee(assignee);
+        task.setStatus("PENDING");
 
         return taskRepository.save(task);
     }
@@ -75,4 +78,17 @@ public class TaskServiceImpl implements TaskService {
 		return tasks;
     }
 
+    @Override
+    public Task completeTask(Long taskId, String remark) {
+        Optional<Task> optionalTask = taskRepository.findById(taskId);
+        if (optionalTask.isEmpty()) {
+            throw new IllegalArgumentException("Task with id " + taskId + " not found");
+        }
+
+        Task task = optionalTask.get();
+        task.setStatus("COMPLETED");
+        task.setRemark(remark);
+        return taskRepository.save(task);
+    }
+    
 }

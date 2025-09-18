@@ -51,12 +51,14 @@ public class Task {
 
 	@Column(nullable = false)
 	private String priority; // e.g., LOW, MEDIUM, HIGH
+	
+	private String remark;
 
 	// Constructors
 	public Task() {
 	}
 
-	public Task(String title, String description, String status, LocalDate dueDate, UserEntity creator, UserEntity assignee, String priority) {
+	public Task(String title, String description, String status, LocalDate dueDate, UserEntity creator, UserEntity assignee, String priority,String remark) {
 		this.title = title;
 		this.description = description;
 		this.status = status;
@@ -64,6 +66,7 @@ public class Task {
 		this.creator = creator;
 		this.assignee = assignee;
 		this.priority = priority;
+		this.remark=remark;
 	}
 
 	// Getters & Setters
@@ -119,5 +122,13 @@ public class Task {
 
 	public void setPriority(String priority) {
 		this.priority = priority;
+	}
+	
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 }

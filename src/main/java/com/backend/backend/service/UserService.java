@@ -15,4 +15,5 @@ public interface UserService {
     UserDto updateUser(Long id, UserEntity user);
     void deleteUser(Long id);
 	//UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+	List<UserEntity> getSupportUsers();
 }

@@ -116,5 +116,10 @@ public class UserServiceImpl implements UserService {
 //        return List.of(new SimpleGrantedAuthority("ROLE_"+ role.getName())); // e.g., "ROLE_ADMIN"
 //    }
 
+    
+    @Override
+    public List<UserEntity> getSupportUsers() {
+        return userRepository.findByRole_Id(3L);
+    }
 
 }

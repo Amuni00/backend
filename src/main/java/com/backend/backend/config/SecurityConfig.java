@@ -12,51 +12,69 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-	
-//	private JWTAuthenticationFilter jwtAuthenticationFilter;
-	private JwtAuthEntryPoint authEntryPoint;
+
+    private final JwtAuthEntryPoint authEntryPoint;
 
     public SecurityConfig(JwtAuthEntryPoint authEntryPoint) {
-//		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-		this.authEntryPoint = authEntryPoint;
-	}
+        this.authEntryPoint = authEntryPoint;
+    }
 
-	@Bean
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ Expose AuthenticationManager as a bean
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            // 🔑 enable CORS support
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
-            	.requestMatchers("/api/auth/login-user").permitAll()
-            	.requestMatchers("/api/admin", "/api/role").hasAuthority("Admin")	
-            	.requestMatchers("/api/task").hasAnyAuthority("Manager", "Support")
-                .anyRequest().authenticated() // Allow all requests (adjust later)
+                .requestMatchers("/api/auth/login-user").permitAll()
+                .requestMatchers("/api/admin", "/api/role").hasAuthority("Admin")
+                .requestMatchers("/api/task").hasAnyAuthority("Manager", "Support")
+                .anyRequest().authenticated()
             )
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for now (useful for APIs)
-        	.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-        	.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        	.exceptionHandling(handling -> handling.authenticationEntryPoint(authEntryPoint));
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(handling -> handling.authenticationEntryPoint(authEntryPoint));
 
         return http.build();
     }
-    
-    @Bean
-	public JWTAuthenticationFilter jwtAuthenticationFilter() {
-		return new JWTAuthenticationFilter();
-	}
 
+    @Bean
+    public JWTAuthenticationFilter jwtAuthenticationFilter() {
+        return new JWTAuthenticationFilter();
+    }
+
+    // 🌍 Global CORS configuration
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // front-end origin(s)
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true); // if sending cookies/Authorization header
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }

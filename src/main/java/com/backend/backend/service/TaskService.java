@@ -10,4 +10,5 @@ public interface TaskService {
     void deleteTask(Long id);
     List<Task> getAllTasks();
     List<Task> getAssigneesTaskById(Long id);
+	Task completeTask(Long taskId, String remark);
 }

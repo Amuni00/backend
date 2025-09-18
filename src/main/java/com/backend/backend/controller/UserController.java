@@ -19,6 +19,10 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+    @GetMapping("/get-support-users")
+    public List<UserEntity> getSupportUsers() {
+        return userService.getSupportUsers();
+    }
 
     // Create user
     @PostMapping("/register-user")
