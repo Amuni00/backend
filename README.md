@@ -203,6 +203,6 @@ This project is open-source and available under the MIT License.
 
 Amanuel Asfaw
 Software Engineering Student | Ethiopia
-Email: amanuelasfaw@example.com
+Email: asfawamanuel89@gmail.com
 
 ---
