@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.ManyToOne;
@@ -43,6 +44,13 @@ public class UserEntity {
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
     
+    // Cascade delete for tasks
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Task> createdTasks;
+
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Task> assignedTasks;
+    
     
     // Getters and Setters
     public Long getId() { return id; }
@@ -68,5 +76,22 @@ public class UserEntity {
 
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
+    
+    public List<Task> getCreatedTasks() {
+        return createdTasks;
+    }
+
+    public void setCreatedTasks(List<Task> createdTasks) {
+        this.createdTasks = createdTasks;
+    }
+
+    public List<Task> getAssignedTasks() {
+        return assignedTasks;
+    }
+
+    public void setAssignedTasks(List<Task> assignedTasks) {
+        this.assignedTasks = assignedTasks;
+    }
+
 
 }
